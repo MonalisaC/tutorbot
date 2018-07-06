@@ -40,6 +40,7 @@ CHATTERBOT = {
         'chatterbot.corpus.spanish.greetings',
         'chatterbot.corpus.english.humor',
         'chatterbot.corpus.english.computers',
+        'chatterbot.corpus.english.emotion',
         'chatterbot.corpus.chinese.greetings',
     ],
     'django_app_name': 'django_chatterbot'
