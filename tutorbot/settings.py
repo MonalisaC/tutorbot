@@ -36,7 +36,11 @@ CHATTERBOT = {
     'name': 'Django ChatterBot Example',
     'trainer': 'chatterbot.trainers.ChatterBotCorpusTrainer',
     'training_data': [
-        'chatterbot.corpus.english.greetings'
+        'chatterbot.corpus.english.greetings',       'chatterbot.corpus.bangla.greetings',
+        'chatterbot.corpus.spanish.greetings',
+        'chatterbot.corpus.english.humor',
+        'chatterbot.corpus.english.computers',
+        'chatterbot.corpus.chinese.greetings',
     ],
     'django_app_name': 'django_chatterbot'
 }
