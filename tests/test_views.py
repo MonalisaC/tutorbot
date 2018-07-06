@@ -1,5 +1,5 @@
 from django.test import TestCase
-from example_app.views import ChatterBotApiView
+from tutorbot.views import ChatterBotApiView
 
 
 class MockResponse(object):
