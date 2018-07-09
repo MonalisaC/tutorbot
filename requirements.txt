@@ -1,3 +1,5 @@
 django>=1.8,<2.0
 chatterbot>=0.8
 beautifulsoup4==4.6.0
+StackAPI==0.1.9
+
