@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from tutorbot.models import Question as Question, Answer as Answer
 from tutorbot.collectors.scraper import Scraper
+from tutorbot.collectors.stacker import Stacker
 
 # ref: https://docs.djangoproject.com/en/1.11/howto/custom-management-commands/
 class Command(BaseCommand):
@@ -12,5 +13,7 @@ class Command(BaseCommand):
         start = Question.objects.count()
         scraper = Scraper()
         scraper.collect()
+        stacker = Stacker()
+        stacker.collect()
         end = Question.objects.count()
         self.stdout.write(self.style.SUCCESS('Knowledge gathering complete. Found %d new knowledge items!' % (end - start)))
