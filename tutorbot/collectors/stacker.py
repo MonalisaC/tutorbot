@@ -4,8 +4,11 @@ from stackapi import StackAPI, StackAPIError
 from bs4 import BeautifulSoup
 from tutorbot.collectors.base import BaseCollector
 import time
+import os
 
 # ref - http://stackapi.readthedocs.io/en/latest/index.html
+
+APP_KEY = os.getenv('STACKAPPS_KEY')
 
 class Stacker(BaseCollector):
 
@@ -17,9 +20,10 @@ class Stacker(BaseCollector):
     def collect(self):
         qa_list = []
         try:
-            site = StackAPI(self.site_name)
-            site.page_size = 10
-            site.max_pages = 1
+            site = StackAPI('stackoverflow', key=APP_KEY)
+            # site = StackAPI(self.site_name)
+            # site.page_size = 10
+            # site.max_pages = 1
             # calling fetch with various parameters - http://stackapi.readthedocs.io/en/latest/user/advanced.html#calling-fetch-with-various-api-parameters
             questions = site.fetch('questions', min=self.min_score, tagged=self.tags, sort='votes', accepted='True')
             while (self.wait_if_throttled(questions)):
@@ -55,6 +59,7 @@ class Stacker(BaseCollector):
     def wait_if_throttled(self, result):
         ''' Checks if the result has a backoff and if so sleeps for that long and returns true. Else (if not throttled) returns false.
             Based on details in https://api.stackexchange.com/docs/throttle. '''
+        # print(result)
         backoff = result.get('backoff', 0)
         if backoff > 0:
             print('Backing off for %d seconds' %s)
