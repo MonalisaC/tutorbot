@@ -41,6 +41,16 @@ CHATTERBOT = {
     'name': 'Django ChatterBot Example',
     'trainer': 'chatterbot.trainers.ChatterBotCorpusTrainer',
     'read_only': True,
+    'logic_adapters': [
+        {
+            'import_path': 'chatterbot.logic.BestMatch'
+        },
+        {
+            'import_path': 'chatterbot.logic.LowConfidenceAdapter',
+            'threshold': 0.65,
+            'default_response': 'I am sorry, but I do not understand. Can you be a bit more specific please?'
+        }
+    ],
     'training_data': [
         'chatterbot.corpus.english.greetings',       'chatterbot.corpus.bangla.greetings',
         'chatterbot.corpus.spanish.greetings',
