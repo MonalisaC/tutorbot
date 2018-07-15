@@ -22,6 +22,20 @@ class Answer(models.Model):
     def __str__(self):
         return self.summary.encode('ascii', 'ignore').decode('ascii')
 
+    def serialize(self):
+        """
+        :returns: A dictionary representation of the answer object.
+        :rtype: dict
+        """
+        import json
+        data = {}
+
+        data['summary'] = self.summary
+        data['text'] = self.text
+        data['detail'] = self.detail
+        data['source'] = self.source
+        return data
+
 class Question(models.Model):
     text     = models.CharField(max_length=500)
     answer   = models.ForeignKey(Answer, on_delete=models.CASCADE)
