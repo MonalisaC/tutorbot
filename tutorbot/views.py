@@ -71,6 +71,20 @@ class ChatterBotApiView(View):
         conversation = self.get_conversation(request)
 
         response = self.chatterbot.get_response(input_data, conversation.id)
+
+        extra = response.extra_data
+        if isinstance(extra, basestring):
+            try:
+                extra = json.loads(extra)
+                if 'answer' in extra:
+                    from tutorbot.models import Answer
+                    answer_obj = Answer.objects.get(pk=extra['answer'])
+                    response.add_extra_data('answer_data', answer_obj.serialize())
+            except ValueError:
+                print("Ignoring extra")
+
+        response.add_extra_data('confidence', response.confidence)
+
         response_data = response.serialize()
 
         return JsonResponse(response_data, status=200)
