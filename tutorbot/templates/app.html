@@ -31,7 +31,7 @@
                 <button class="btn btn-primary js-say">Submit</button>
               </span>
             </div>
-            
+
           </div>
         </div>
 
@@ -70,6 +70,18 @@
         $chatlog.append($row);
       }
 
+      function createDetailedRow(statement) {
+        var $row = $('<li class="list-group-item"></li>');
+
+        text = statement.text
+        detail = statement.extra_data.answer_data.detail
+        source = statement.extra_data.answer_data.source
+        $row.text(text);
+        $row.append('<div class="detail">' + detail + '</div>')
+        $row.append('<div class="source"><a href="' + source + '" target="_blank">Source</div>')
+        $chatlog.append($row);
+      }
+
       function submitInput() {
         var inputData = {
           'text': $input.val()
@@ -86,7 +98,11 @@
         });
 
         $submit.done(function(statement) {
+          if ('answer_data' in statement.extra_data) {
+            createDetailedRow(statement);
+          } else {
             createRow(statement.text);
+          }
 
             // Clear the input field
             $input.val('');
