@@ -4,6 +4,14 @@
 }
 
 .chat-log {
-    max-height:200px;
+    max-height:600px;
     overflow-y:scroll;
+}
+
+.detail {
+  background-color: azure;
+}
+
+.source {
+  text-align: right;
 }
