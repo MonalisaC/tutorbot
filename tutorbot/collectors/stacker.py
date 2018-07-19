@@ -28,7 +28,11 @@ class Stacker(BaseCollector):
             questions = site.fetch('questions', min=self.min_score, tagged=self.tags, sort='votes', accepted='True')
             while (self.wait_if_throttled(questions)):
                 questions = site.fetch('questions', min=self.min_score, tagged=self.tags, sort='votes', accepted='True')
-            print ('No of questions from %s = %d' % (self.site_name, len(questions['items'])))
+            total = len(questions['items'])
+            print ('Collecting from %s. No of questions = %d' % (self.site_name, total))
+            processed = 0
+            added = 0
+            skipped = 0
             for q in questions['items']:
                 time.sleep(1/25) # this is to ensure less than 30 req per second (https://api.stackexchange.com/docs/throttle)
                 if 'accepted_answer_id' in q.keys():
@@ -43,7 +47,12 @@ class Stacker(BaseCollector):
                     # print scraped
                     # print question
                     qa_list.append(scraped)
-                    self.add_qa(scraped)
+                    if self.add_qa(scraped):
+                        added += 1
+                    else:
+                        skipped += 1
+                processed += 1
+                self.show_progress(processed, total, added, skipped)
         except StackAPIError as e:
             print('Failed to fetch data from stack overflow: [%s]. Skipping.' % e.message)
         return qa_list
