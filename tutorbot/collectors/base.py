@@ -2,6 +2,7 @@ from __future__ import print_function
 from bs4 import BeautifulSoup, Tag
 from tutorbot.models import Question as Question, Answer as Answer
 import sys
+from django.db.utils import DataError
 
 class BaseCollector(object):
 
@@ -41,7 +42,7 @@ class BaseCollector(object):
                 # self.stdout.write(self.style.NOTICE('Skipping existing question: [%s]' % qa['question']))
                 # print('Skipping existing question: [%s]' % qa['question'])
                 return False
-        except django.db.utils.DataError as e:
+        except DataError as e:
             print("skipping [%s] due to error - " % (qa['question'], str(e)))
             return False
 
