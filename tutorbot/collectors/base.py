@@ -30,15 +30,19 @@ class BaseCollector(object):
 
     def add_qa(self, qa):
         qs = Question.objects.filter(text=qa['question'])
-        if not qs:
-            answer = Answer(summary=self.summarize_html(qa['answer']), text=self.get_text_from_html(qa['answer']), detail=qa['answer'], source=qa['source'])
-            answer.save()
-            question = Question(text=qa['question'], answer=answer)
-            question.save()
-            return True
-        else:
-            # self.stdout.write(self.style.NOTICE('Skipping existing question: [%s]' % qa['question']))
-            # print('Skipping existing question: [%s]' % qa['question'])
+        try:
+            if not qs:
+                answer = Answer(summary=self.summarize_html(qa['answer']), text=self.get_text_from_html(qa['answer']), detail=qa['answer'], source=qa['source'])
+                answer.save()
+                question = Question(text=qa['question'], answer=answer)
+                question.save()
+                return True
+            else:
+                # self.stdout.write(self.style.NOTICE('Skipping existing question: [%s]' % qa['question']))
+                # print('Skipping existing question: [%s]' % qa['question'])
+                return False
+        except django.db.utils.DataError as e:
+            print("skipping [%s] due to error - " % (qa['question'], str(e)))
             return False
 
     def show_progress(self, processed, total, added, skipped):
