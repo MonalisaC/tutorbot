@@ -1,5 +1,7 @@
+from __future__ import print_function
 from bs4 import BeautifulSoup, Tag
 from tutorbot.models import Question as Question, Answer as Answer
+import sys
 
 class BaseCollector(object):
 
@@ -33,6 +35,16 @@ class BaseCollector(object):
             answer.save()
             question = Question(text=qa['question'], answer=answer)
             question.save()
+            return True
         else:
             # self.stdout.write(self.style.NOTICE('Skipping existing question: [%s]' % qa['question']))
-            print('Skipping existing question: [%s]' % qa['question'])
+            # print('Skipping existing question: [%s]' % qa['question'])
+            return False
+
+    def show_progress(self, processed, total, added, skipped):
+        msg = "Processed: %d%% (added = %d, skipped = %d)" % (100 * processed / total, added, skipped)
+        if processed < total:
+            print(msg, end = '\r')
+            sys.stdout.flush()
+        else:
+            print(msg)
