@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from tutorbot.collectors.base import BaseCollector
 import time
 import os
+import datetime
 
 # ref - http://stackapi.readthedocs.io/en/latest/index.html
 
@@ -17,17 +18,38 @@ class Stacker(BaseCollector):
         self.min_score = 200 # https://meta.stackexchange.com/questions/229255/what-is-the-score-of-a-post
         self.site_name = 'stackoverflow'
 
-    def collect(self):
+    def collect(self, *args, **options):
+        # print(args)
+        print(options)
+        min = self.min_score
+        if options['min']:
+            min = options['min']
+        tagged = self.tags
+        if options['tagged']:
+            tagged = options['tagged'].split(',')
         qa_list = []
         try:
             site = StackAPI('stackoverflow', key=APP_KEY)
             # site = StackAPI(self.site_name)
-            # site.page_size = 10
-            # site.max_pages = 1
+            if 'count' in options:
+                count = options['count']
+                if count < 100:
+                    site.page_size = count
+                    site.max_pages = 1
+                else:
+                    site.max_pages = count / site.page_size
+
+            epoch_str = '19700101'
+            fromdate = time.strptime("19700101", '%Y%m%d')
+            todate = datetime.datetime.now()
+            if options['fromdate']:
+                fromdate = time.strptime(options['fromdate'], '%Y%m%d')
+            if options['todate']:
+                todate = time.strptime(options['todate'], '%Y%m%d')
             # calling fetch with various parameters - http://stackapi.readthedocs.io/en/latest/user/advanced.html#calling-fetch-with-various-api-parameters
-            questions = site.fetch('questions', min=self.min_score, tagged=self.tags, sort='votes', accepted='True')
+            questions = site.fetch('questions', min=min, tagged=tagged, sort='votes', accepted='True', fromdate=fromdate, todate=todate)
             while (self.wait_if_throttled(questions)):
-                questions = site.fetch('questions', min=self.min_score, tagged=self.tags, sort='votes', accepted='True')
+                questions = site.fetch('questions', min=min, tagged=tagged, sort='votes', accepted='True', fromdate=fromdate, todate=todate)
             total = len(questions['items'])
             print ('Collecting from %s. No of questions = %d' % (self.site_name, total))
             processed = 0

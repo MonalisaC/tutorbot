@@ -10,7 +10,7 @@ class Scraper(BaseCollector):
     def __init__(self):
         self.source = 'https://www.edureka.co/blog/interview-questions/react-interview-questions/'
 
-    def collect(self):
+    def collect(self, *args, **options):
         page = urllib2.urlopen(self.source)
         soup = BeautifulSoup(page, 'html.parser')
         h3s = soup.find_all('h3')
