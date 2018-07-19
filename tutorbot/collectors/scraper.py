@@ -15,7 +15,13 @@ class Scraper(BaseCollector):
         soup = BeautifulSoup(page, 'html.parser')
         h3s = soup.find_all('h3')
         qa_list = []
+        total = len(h3s)
+        print('Collecting from %s' % self.source)
+        processed = 0
+        added = 0
+        skipped = 0
         for h3 in h3s:
+            processed += 1
             text = h3.get_text()
             if text[0].isdigit():
                 question = text.lstrip(digits).lstrip('.').strip()
@@ -35,5 +41,9 @@ class Scraper(BaseCollector):
                 scraped = {'question': question, 'answer': answer, 'source':self.source}
                 # print(scraped)
                 qa_list.append(scraped)
-                self.add_qa(scraped)
+                if self.add_qa(scraped):
+                    added += 1
+                else:
+                    skipped += 1
+            self.show_progress(processed, total, added, skipped)
         return qa_list
