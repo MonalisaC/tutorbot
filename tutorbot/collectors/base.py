@@ -43,7 +43,7 @@ class BaseCollector(object):
                 # print('Skipping existing question: [%s]' % qa['question'])
                 return False
         except DataError as e:
-            print("skipping [%s] due to error - " % (qa['question'], str(e)))
+            print("skipping [%s] due to error - %s" % (qa['question'], str(e)))
             return False
 
     def show_progress(self, processed, total, added, skipped):
