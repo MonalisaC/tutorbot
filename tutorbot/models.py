@@ -5,7 +5,7 @@ from django.utils import timezone
 from taggit.managers import TaggableManager
 
 class Answer(models.Model):
-    summary  = models.CharField(max_length=200)
+    summary  = models.CharField(max_length=500)
     text     = models.CharField(max_length=10000)
     detail   = models.CharField(max_length=10000)
     source   = models.CharField(max_length=500)
