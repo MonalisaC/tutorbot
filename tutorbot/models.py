@@ -5,10 +5,10 @@ from django.utils import timezone
 from taggit.managers import TaggableManager
 
 class Answer(models.Model):
-    summary  = models.CharField(max_length=1000)
-    text     = models.CharField(max_length=10000)
-    detail   = models.CharField(max_length=10000)
-    source   = models.CharField(max_length=1000)
+    summary  = models.TextField(max_length=1000)
+    text     = models.TextField(max_length=10000)
+    detail   = models.TextField(max_length=10000)
+    source   = models.TextField(max_length=1000)
     created  = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
 
