@@ -6,9 +6,9 @@ from taggit.managers import TaggableManager
 
 class Answer(models.Model):
     summary  = models.CharField(max_length=200)
-    text     = models.CharField(max_length=5000)
-    detail   = models.CharField(max_length=5000)
-    source   = models.CharField(max_length=200)
+    text     = models.CharField(max_length=10000)
+    detail   = models.CharField(max_length=10000)
+    source   = models.CharField(max_length=500)
     created  = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
 
