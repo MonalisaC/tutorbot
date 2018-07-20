@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils import timezone
+from taggit.managers import TaggableManager
 
 class Answer(models.Model):
     summary  = models.CharField(max_length=200)
@@ -42,6 +43,7 @@ class Question(models.Model):
     learned  = models.BooleanField(default=False)
     created  = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
+    tags     = TaggableManager()
 
     # reference: https://stackoverflow.com/questions/1737017/django-auto-now-and-auto-now-add/1737078#1737078
     def save(self, *args, **kwargs):
