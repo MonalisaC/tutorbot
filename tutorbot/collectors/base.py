@@ -37,10 +37,13 @@ class BaseCollector(object):
                 answer.save()
                 question = Question(text=qa['question'], answer=answer)
                 question.save()
-                return True
+                if 'tags' in qa:
+                    self.add_tags(question, qa['tags'])
             else:
                 # self.stdout.write(self.style.NOTICE('Skipping existing question: [%s]' % qa['question']))
                 # print('Skipping existing question: [%s]' % qa['question'])
+                if 'tags' in qa:
+                    self.add_tags(qs[0], qa['tags'])
                 return False
         except DataError as e:
             print("skipping [%s] due to error - %s" % (qa['question'], str(e)))
@@ -53,3 +56,9 @@ class BaseCollector(object):
             sys.stdout.flush()
         else:
             print(msg)
+
+    def add_tags(self, question, tags):
+        for tag in tags:
+            question.tags.add(tag)
+            question.save()
+        return True
