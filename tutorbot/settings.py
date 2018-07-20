@@ -40,6 +40,7 @@ INSTALLED_APPS = (
 
     'chatterbot.ext.django_chatterbot',
     'tutorbot',
+    'taggit',
 )
 
 # ChatterBot settings
@@ -123,6 +124,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+TAGGIT_CASE_INSENSITIVE = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
