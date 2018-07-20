@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'chatterbot.ext.django_chatterbot',
     'tutorbot',
     'taggit',
+    'corsheaders',
 )
 
 # ChatterBot settings
@@ -79,7 +80,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
