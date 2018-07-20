@@ -9,6 +9,7 @@ class Scraper(BaseCollector):
 
     def __init__(self):
         self.source = 'https://www.edureka.co/blog/interview-questions/react-interview-questions/'
+        self.tags = ['react']
 
     def collect(self, *args, **options):
         page = urllib2.urlopen(self.source)
@@ -38,7 +39,7 @@ class Scraper(BaseCollector):
                             break
                         next = next.next_sibling
                 answer = '<div>' + answer + '</div>'
-                scraped = {'question': question, 'answer': answer, 'source':self.source}
+                scraped = {'question': question, 'answer': answer, 'source':self.source, 'tags': self.tags }
                 # print(scraped)
                 qa_list.append(scraped)
                 if self.add_qa(scraped):
