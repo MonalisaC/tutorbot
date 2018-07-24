@@ -64,7 +64,8 @@ CHATTERBOT = {
         }
     ],
     'training_data': [
-        'chatterbot.corpus.english.greetings',
+        'tutorbot/data/corpus/greetings.yml',
+        # 'chatterbot.corpus.english.greetings',
         'chatterbot.corpus.bangla.greetings',
         'chatterbot.corpus.spanish.greetings',
         'chatterbot.corpus.english.humor',
