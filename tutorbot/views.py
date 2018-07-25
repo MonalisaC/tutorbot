@@ -72,18 +72,7 @@ class ChatterBotApiView(View):
 
         response = self.chatterbot.get_response(input_data, conversation.id)
 
-        extra = response.extra_data
-        if isinstance(extra, basestring):
-            try:
-                extra = json.loads(extra)
-                if 'answer' in extra:
-                    from tutorbot.models import Answer
-                    answer_obj = Answer.objects.get(pk=extra['answer'])
-                    response.add_extra_data('answer_data', answer_obj.serialize())
-            except ValueError:
-                print("Ignoring extra")
-
-        response.add_extra_data('confidence', response.confidence)
+        self.__add_or_update_extra_data(response)
 
         response_data = response.serialize()
 
@@ -99,3 +88,38 @@ class ChatterBotApiView(View):
             'name': self.chatterbot.name,
             'conversation': conversation.statements
         })
+
+    def __add_or_update_extra_data(self, response):
+        extra = response.extra_data
+        # add answer data and more if there is some additional information available
+        if isinstance(extra, basestring):
+            try:
+                extra = json.loads(extra)
+                if 'answer' in extra:
+                    from tutorbot.models import Answer
+                    answer_obj = Answer.objects.get(pk=extra['answer'])
+                    response.add_extra_data('answer_data', answer_obj.serialize())
+                    self.__add_related_info(response, answer_obj)
+            except ValueError:
+                print("Ignoring extra")
+
+        # add confidence
+        response.add_extra_data('confidence', response.confidence)
+
+    def __add_related_info(self, response, answer_obj):
+        # get related questions for this answer (ref: https://stackoverflow.com/questions/15306897/django-reverse-lookup-of-foreign-keys)
+        # and the get first form this queryset (ref: https://stackoverflow.com/questions/5123839/fastest-way-to-get-the-first-object-from-a-queryset-in-django)
+        question = answer_obj.question_set.first()
+        if question:
+            related_qs = []
+            q_tags = question.tags
+            if q_tags:
+                tags = []
+                for q_tag in q_tags.names():
+                    tags.append(str(q_tag))
+            response.add_extra_data('tags', tags)
+            q_objs = q_tags.similar_objects()
+            for q_obj in q_objs:
+                related_qs.append(q_obj.text)
+            if len(related_qs) > 0:
+                response.add_extra_data('related_questions', related_qs[:100])
