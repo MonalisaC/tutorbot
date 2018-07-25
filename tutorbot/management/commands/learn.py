@@ -10,6 +10,10 @@ similar_q_prefix_pairs = [
     ['explain what', 'what'],
 ]
 
+similar_q_content = [
+    ['explain its working.', ''],
+]
+
 # ref: https://docs.djangoproject.com/en/1.11/howto/custom-management-commands/
 class Command(BaseCommand):
     help = 'Learns from gathered new knowledge'
@@ -43,11 +47,18 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Knowledge learning complete. Found %d new knowledge items!' % count))
 
     def create_similar_questions(self, text):
-        for q_prefix in similar_q_prefix_pairs:
-            if text.lower().startswith(q_prefix[0]):
-                list = []
-                return [text, text.lower().replace(q_prefix[0], q_prefix[1], 1)]
-        return [text]
+        similar_questions = [text]
+        for q_text in similar_questions:
+            for q_prefix in similar_q_prefix_pairs:
+                if q_text.lower().startswith(q_prefix[0]):
+                    similar_questions.append(q_text.lower().replace(q_prefix[0], q_prefix[1], 1))
+                    break
+        for q_text in similar_questions:
+            for q_content in similar_q_content:
+                if q_content[0] in q_text.lower():
+                    similar_questions.append(q_text.lower().replace(q_content[0], q_content[1]))
+                    break
+        return similar_questions
 
     def update_answer_statement_data(self, answer, answer_summary):
         statement_qs = Statement.objects.filter(text=answer_summary)
